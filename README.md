@@ -5,9 +5,11 @@ High-performance 3-page landing funnel for Facebook ad traffic. Built with Next.
 ## Routes
 
 - **/** — Redirects to `/learn-online-income`
-- **/learn-online-income** — Audience: people looking to earn money online
-- **/ad-funnel-system** — Audience: business owners with underperforming ads
-- **/high-converting-website** — Audience: businesses whose websites don’t generate leads
+- **/learn-online-income** — Audience: people looking to earn money online. Primary CTA opens a short form, then WhatsApp.
+- **/ad-funnel-system** — Audience: business owners with underperforming ads. Primary CTA opens a form (name + business name), then WhatsApp.
+- **/high-converting-website** — Audience: businesses whose websites don’t generate leads. Primary CTA opens a form (name), then WhatsApp.
+
+All WhatsApp links use **+254 792 265 306** unless overridden by `NEXT_PUBLIC_WHATSAPP_URL`. Lead capture forms submit to `/api/lead` and can forward to `FORM_WEBHOOK_URL`.
 
 ## Setup
 
@@ -21,9 +23,10 @@ High-performance 3-page landing funnel for Facebook ad traffic. Built with Next.
 
    Copy `.env.example` to `.env.local` and fill in:
 
-   - `NEXT_PUBLIC_WHATSAPP_URL` — WhatsApp link (e.g. `https://wa.me/1234567890`)
-   - `NEXT_PUBLIC_META_PIXEL_ID` — Meta (Facebook) Pixel ID
-   - `NEXT_PUBLIC_GA_MEASUREMENT_ID` — Google Analytics Measurement ID (e.g. `G-XXXXXXXXXX`)
+   - `NEXT_PUBLIC_WHATSAPP_URL` — WhatsApp link with optional prefilled message (e.g. `https://wa.me/254792265306?text=Hello%20I%20am%20interested%20in%20your%20offer`). If not set, the app uses **+254 792 265 306** by default.
+   - `NEXT_PUBLIC_META_PIXEL_ID` — Meta (Facebook) Pixel ID for ad conversion tracking.
+   - `NEXT_PUBLIC_GA_MEASUREMENT_ID` — Google Analytics Measurement ID (e.g. `G-XXXXXXXXXX`).
+   - `FORM_WEBHOOK_URL` — (Optional) Where to send lead form submissions (name, email, formName). Use a Formspree/Getform URL or your API. If not set, submissions are logged in the server terminal.
 
 3. **Run**
 
