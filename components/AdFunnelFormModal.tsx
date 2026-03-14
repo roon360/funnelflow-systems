@@ -1,0 +1,139 @@
+'use client';
+
+import { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+
+const WHATSAPP_BASE = 'https://wa.me/254792265306';
+
+export function AdFunnelFormModal({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [name, setName] = useState('');
+  const [businessName, setBusinessName] = useState('');
+  const [errors, setErrors] = useState<{ name?: string; businessName?: string }>({});
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const nextErrors: { name?: string; businessName?: string } = {};
+      if (!name.trim()) {
+        nextErrors.name = 'Please enter your name.';
+      }
+      if (!businessName.trim()) {
+        nextErrors.businessName = 'Please enter your business name.';
+      }
+      setErrors(nextErrors);
+      if (Object.keys(nextErrors).length > 0) return;
+
+      const message = `Hello I am ${name.trim()}. My business is called ${businessName.trim()}. I would like to get your profitable ad system installed for my business.`;
+      const encoded = encodeURIComponent(message);
+      const url = `${WHATSAPP_BASE}?text=${encoded}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+      setTimeout(() => {
+        onClose();
+        setName('');
+        setBusinessName('');
+        setErrors({});
+      }, 350);
+    },
+    [name, businessName, onClose]
+  );
+
+  const handleClose = useCallback(() => {
+    setErrors({});
+    onClose();
+  }, [onClose]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleClose}
+            className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
+            aria-hidden
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25 }}
+            className="fixed left-1/2 top-1/2 z-[101] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-brand-blue-light p-6 shadow-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ad-funnel-form-title"
+          >
+            <button
+              type="button"
+              onClick={handleClose}
+              className="absolute right-4 top-4 rounded-full p-1 text-white/70 hover:bg-white/10 hover:text-white transition"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <h2 id="ad-funnel-form-title" className="pr-8 text-xl font-bold text-white mb-6">
+              Get your ad system installed
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="ad-funnel-form-name" className="block text-sm font-medium text-white/90 mb-1">
+                  Name
+                </label>
+                <input
+                  id="ad-funnel-form-name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+                  }}
+                  placeholder="Your name"
+                  className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/50 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange"
+                  autoComplete="name"
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-400">{errors.name}</p>
+                )}
+              </div>
+              <div>
+                <label htmlFor="ad-funnel-form-business" className="block text-sm font-medium text-white/90 mb-1">
+                  Business Name
+                </label>
+                <input
+                  id="ad-funnel-form-business"
+                  type="text"
+                  value={businessName}
+                  onChange={(e) => {
+                    setBusinessName(e.target.value);
+                    if (errors.businessName) setErrors((prev) => ({ ...prev, businessName: undefined }));
+                  }}
+                  placeholder="Your business name"
+                  className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/50 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange"
+                  autoComplete="organization"
+                />
+                {errors.businessName && (
+                  <p className="mt-1 text-sm text-red-400">{errors.businessName}</p>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="w-full min-h-[48px] rounded-xl bg-brand-orange py-4 font-semibold text-white transition hover:bg-brand-orange-hover active:scale-[0.98]"
+              >
+                Send via WhatsApp
+              </button>
+            </form>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
