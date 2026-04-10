@@ -62,10 +62,10 @@ export default function RootLayout({
           <AdFunnelFormProvider>
             <HighConvertingWebsiteFormProvider>
               {children}
+              <Analytics />
               <StickyCTA />
               <WhatsAppButton />
               <ExitIntentPopup />
-              <Analytics />
             </HighConvertingWebsiteFormProvider>
           </AdFunnelFormProvider>
         </LearnOnlineFormProvider>

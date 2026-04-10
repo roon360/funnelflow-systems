@@ -8,6 +8,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        primary: '#FF7A00',
+        accent: '#FFA726',
+        darkBg: '#0B0F1A',
         brand: {
           orange: '#ff6b35',
           'orange-hover': '#ff8555',
